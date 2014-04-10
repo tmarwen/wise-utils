@@ -18,4 +18,11 @@
         <module>rest</module>
     </modules>
 
+    <scm>
+        <connection>git@github.com:tmarwen/wise-utils.git</connection>
+        <developerConnection>git@github.com:tmarwen/wise-utils.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/tmarwen/wise-utils</url>
+    </scm>
+
 </project>
