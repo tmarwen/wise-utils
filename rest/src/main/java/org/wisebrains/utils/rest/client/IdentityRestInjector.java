@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class IdentityRestInjector {
 
-  private static final Log LOG = LogFactory.getLog("Manage Document RESTful Client");
+  private static final Log LOG = LogFactory.getLog("org.wisebrains.utils.rest.client.IdentityRestInjector");
 
   public static void main(String[] args) throws IOException {
 
