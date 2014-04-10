@@ -6,7 +6,7 @@
     <!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} | %highlight(%-5level) | %logger{16} - %msg [%highlight(%thread)]%n</pattern>
+      <pattern>%green(%d{HH:mm:ss.SSS}) | %highlight(%-5level) | %msg [%cyan(%logger{16})&lt;%green(%thread)&gt;]%n</pattern>
     </encoder>
   </appender>
 
