@@ -32,17 +32,20 @@ public class IdentityRestInjector {
 
     DefaultHttpClient httpClient = new DefaultHttpClient();
 
+    int usersToInjectPerCycle = ((args[0] != null) && (Integer.parseInt(args[0]) > 0)) ? Integer.parseInt(args[0]) : 100;
+    int totalUsersToInject = ((args[1] != null) && (Integer.parseInt(args[1]) > 0)) ? Integer.parseInt(args[1]) : 10000;
+
     String loginURL = "http://localhost:8080/portal/login";
     String injectionURI = "http://localhost:8080/portal/private/rest/bench/inject/identity?number=";
 
     try {
       LOG.info("Trying to perform a login...");
-      HttpPost httpost = new HttpPost(loginURL); //URL to login page
+      HttpPost httpPost = new HttpPost(loginURL); //URL to login page
       List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
       nameValuePairs.add(new BasicNameValuePair("username", "root"));
       nameValuePairs.add(new BasicNameValuePair("password", "gtn"));
-      httpost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
-      HttpResponse response = httpClient.execute(httpost);
+      httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+      HttpResponse response = httpClient.execute(httpPost);
       HttpEntity entity = response.getEntity();
 
       LOG.info(String.format("LOGIN STATUS: %s", response.getStatusLine()));
@@ -59,13 +62,13 @@ public class IdentityRestInjector {
         }
       }
 
-      int usersToInjectPerCycle = 100;
-      int totalUsersToInject = 10000;
       int iterations = totalUsersToInject / usersToInjectPerCycle;
+      LOG.info(String.format("%d users will be injected in %d cycles...", totalUsersToInject, iterations));
 
       String injectionURL = injectionURI.concat(String.valueOf(usersToInjectPerCycle));
 
       for (int i = 0; i<iterations; i++){
+        LOG.info(String.format("Injecting Lot n°: %d", i));
         HttpGet httpGet = new HttpGet(injectionURL);
         response = httpClient.execute(httpGet);
         entity = response.getEntity();
