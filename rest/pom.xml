@@ -54,7 +54,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <outputDirectory>${project.build.directory}/dependency-jars</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -67,7 +67,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
+                            <classpathPrefix>dependency-jars/</classpathPrefix>
                             <mainClass>org.wisebrains.utils.rest.client.IdentityRestInjector</mainClass>
                         </manifest>
                     </archive>
