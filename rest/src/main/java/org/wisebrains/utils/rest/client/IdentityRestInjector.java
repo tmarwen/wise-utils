@@ -1,7 +1,5 @@
 package org.wisebrains.utils.rest.client;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -13,6 +11,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class IdentityRestInjector {
 
-  private static final Log LOG = LogFactory.getLog("org.wisebrains.utils.rest.client.IdentityRestInjector");
+  private static final Logger LOG = LoggerFactory.getLogger("org.wisebrains.utils.rest.client.IdentityRestInjector");
 
   public static void main(String[] args) throws IOException {
 
@@ -48,7 +48,7 @@ public class IdentityRestInjector {
       HttpResponse response = httpClient.execute(httpPost);
       HttpEntity entity = response.getEntity();
 
-      LOG.info(String.format("LOGIN STATUS: %s", response.getStatusLine()));
+      LOG.info("LOGIN STATUS: {}", response.getStatusLine());
       EntityUtils.consume(entity);
       //Checking the sessionID in cookies
       List<Cookie> cookies = httpClient.getCookieStore().getCookies();
@@ -58,21 +58,21 @@ public class IdentityRestInjector {
         Iterator iterator = cookies.iterator();
         while (iterator.hasNext()) {
           Cookie cookie = (Cookie) iterator.next();
-          LOG.info(String.format("Name: %s / Value: %s", cookie.getName(), cookie.getValue()));
+          LOG.info("Name: {} / Value: {}", cookie.getName(), cookie.getValue());
         }
       }
 
       int iterations = totalUsersToInject / usersToInjectPerCycle;
-      LOG.info(String.format("%d users will be injected in %d cycles...", totalUsersToInject, iterations));
+      LOG.info("{} users will be injected in {} cycles...", totalUsersToInject, iterations);
 
       String injectionURL = injectionURI.concat(String.valueOf(usersToInjectPerCycle));
 
       for (int i = 0; i<iterations; i++){
-        LOG.info(String.format("Injecting Lot n°: %d", i++));
+        LOG.info("Injecting Lot n°: {}", i++);
         HttpGet httpGet = new HttpGet(injectionURL);
         response = httpClient.execute(httpGet);
         entity = response.getEntity();
-        LOG.info(String.format("User creation status: %s", response.getStatusLine()));
+        LOG.info("User creation status: {}", response.getStatusLine());
         String responseString = EntityUtils.toString(entity, "UTF-8");
         LOG.info(responseString);
       }
@@ -82,7 +82,7 @@ public class IdentityRestInjector {
         HttpGet httpGet = new HttpGet(injectionURL);
         response = httpClient.execute(httpGet);
         entity = response.getEntity();
-        LOG.info(String.format("User creation status: %s", response.getStatusLine()));
+        LOG.info("User creation status: {}", response.getStatusLine());
         String responseString = EntityUtils.toString(entity, "UTF-8");
         LOG.info(responseString);
       }
