@@ -68,7 +68,7 @@ public class IdentityRestInjector {
       String injectionURL = injectionURI.concat(String.valueOf(usersToInjectPerCycle));
 
       for (int i = 0; i<iterations; i++){
-        LOG.info(String.format("Injecting Lot n°: %d", i));
+        LOG.info(String.format("Injecting Lot n°: %d", i++));
         HttpGet httpGet = new HttpGet(injectionURL);
         response = httpClient.execute(httpGet);
         entity = response.getEntity();
@@ -89,6 +89,7 @@ public class IdentityRestInjector {
 
     } finally {
       //Close the HTTP connection
+      LOG.info("** User injection done, the connection will be closed **");
       httpClient.getConnectionManager().shutdown();
     }
 
