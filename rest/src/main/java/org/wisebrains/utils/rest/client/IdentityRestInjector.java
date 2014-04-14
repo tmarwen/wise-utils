@@ -1,5 +1,6 @@
 package org.wisebrains.utils.rest.client;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -27,16 +28,31 @@ import java.util.List;
 public class IdentityRestInjector {
 
   private static final Logger LOG = LoggerFactory.getLogger("org.wisebrains.utils.rest.client.IdentityRestInjector");
+  private final int USERS_TO_INJECT_PER_CYCLE = 100;
+  private final int TOTAL_USERS_TO_INJECT = 10000;
+  private final String HOST = "localhost";
+  private final String PORT = "8080";
+  private String host;
+  private String port;
+  private int usersToInjectPerCycle;
+  private int totalUsersToInject;
+
+  public IdentityRestInjector(String host, String port, int usersToInjectPerCycle, int totalUsersToInject) {
+    this.host = (!StringUtils.isBlank(host)) ? host : HOST;
+    this.port = (!StringUtils.isBlank(port)) ? port : PORT;
+    this.usersToInjectPerCycle = (usersToInjectPerCycle != 0) ? usersToInjectPerCycle : USERS_TO_INJECT_PER_CYCLE;
+    this.totalUsersToInject = (totalUsersToInject != 0) ? totalUsersToInject : TOTAL_USERS_TO_INJECT;
+  }
 
   public static void main(String[] args) throws IOException {
 
     DefaultHttpClient httpClient = new DefaultHttpClient();
 
-    int usersToInjectPerCycle = ((args[0] != null) && (Integer.parseInt(args[0]) > 0)) ? Integer.parseInt(args[0]) : 100;
-    int totalUsersToInject = ((args[1] != null) && (Integer.parseInt(args[1]) > 0)) ? Integer.parseInt(args[1]) : 10000;
+    IdentityRestInjector identityRestInjector = new IdentityRestInjector(args[0], args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 
-    String loginURL = "http://localhost:8080/portal/login";
-    String injectionURI = "http://localhost:8080/portal/private/rest/bench/inject/identity?number=";
+    String loginURL = String.format("http://%s:%s/portal/login",identityRestInjector.host,identityRestInjector.port);
+
+    String injectionURI = String.format("http://%s:%s/portal/private/rest/bench/inject/identity?number=",identityRestInjector.host,identityRestInjector.port);
 
     try {
       LOG.info("Trying to perform a login...");
@@ -62,10 +78,10 @@ public class IdentityRestInjector {
         }
       }
 
-      int iterations = totalUsersToInject / usersToInjectPerCycle;
-      LOG.info("{} users will be injected in {} cycles...", totalUsersToInject, iterations);
+      int iterations = identityRestInjector.totalUsersToInject / identityRestInjector.usersToInjectPerCycle;
+      LOG.info("{} users will be injected in {} cycles...", identityRestInjector.totalUsersToInject, iterations);
 
-      String injectionURL = injectionURI.concat(String.valueOf(usersToInjectPerCycle));
+      String injectionURL = injectionURI.concat(String.valueOf(identityRestInjector.usersToInjectPerCycle));
 
       for (int i = 0; i<iterations; i++){
         LOG.info("Injecting Lot n°: {}", i++);
@@ -77,8 +93,8 @@ public class IdentityRestInjector {
         LOG.info(responseString);
       }
 
-      if ((totalUsersToInject % usersToInjectPerCycle) != 0){
-        injectionURL = injectionURI.concat(String.valueOf(totalUsersToInject % usersToInjectPerCycle));
+      if ((identityRestInjector.totalUsersToInject % identityRestInjector.usersToInjectPerCycle) != 0){
+        injectionURL = injectionURI.concat(String.valueOf(identityRestInjector.totalUsersToInject % identityRestInjector.usersToInjectPerCycle));
         HttpGet httpGet = new HttpGet(injectionURL);
         response = httpClient.execute(httpGet);
         entity = response.getEntity();
