@@ -25,4 +25,12 @@
         <url>https://github.com/tmarwen/wise-utils</url>
     </scm>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.1</version>
+        </dependency>
+    </dependencies>
+
 </project>
