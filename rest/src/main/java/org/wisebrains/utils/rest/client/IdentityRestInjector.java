@@ -83,8 +83,10 @@ public class IdentityRestInjector {
 
       String injectionURL = injectionURI.concat(String.valueOf(identityRestInjector.usersToInjectPerCycle));
 
+      int count = 1;
+
       for (int i = 0; i<iterations; i++){
-        LOG.info("Injecting Lot n°: {}", i++);
+        LOG.info("Injecting Lot n°: {}", count++);
         HttpGet httpGet = new HttpGet(injectionURL);
         response = httpClient.execute(httpGet);
         entity = response.getEntity();
