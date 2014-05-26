@@ -24,6 +24,7 @@
 
   <modules>
     <module>rest</module>
+    <module>standalone</module>
   </modules>
 
   <dependencies>
