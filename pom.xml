@@ -9,6 +9,8 @@
   <version>1.0.x-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <name>Wise Utils Parent</name>
+
   <properties>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
