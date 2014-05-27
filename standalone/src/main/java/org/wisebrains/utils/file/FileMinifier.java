@@ -19,6 +19,7 @@ public class FileMinifier
   private String fileToPath;
   private String searchKey;
   private int linesToCount;
+  private String stopKey;
 
   public FileMinifier(String fileFromPath, String fileToPath, String searchKey, int linesToCount)
   {
@@ -28,6 +29,15 @@ public class FileMinifier
     this.linesToCount = linesToCount;
   }
 
+  public FileMinifier(String fileFromPath, String fileToPath, String searchKey, String stopKey)
+  {
+    this.fileFromPath = fileFromPath;
+    this.fileToPath = fileToPath;
+    this.searchKey = searchKey;
+    this.stopKey = stopKey;
+  }
+
+
   public FileMinifier(String fileFromPath, String searchKey, int linesToCount)
   {
     this.fileFromPath = fileFromPath;
@@ -36,22 +46,47 @@ public class FileMinifier
     this.linesToCount = linesToCount;
   }
 
+  public FileMinifier(String fileFromPath, String searchKey, String stopKey)
+  {
+    this.fileFromPath = fileFromPath;
+    this.fileToPath = fileFromPath + "-minified";
+    this.searchKey = searchKey;
+    this.stopKey = stopKey;
+  }
+
   public static void main(String[] args)
   {
     FileMinifier fileMinifier;
 
-    if (args.length >= 4)
+    if (args.length > 4)
     {
-      fileMinifier = new FileMinifier(args[0], args[1], args[2], Integer.parseInt(args[3]));
+      if (args[0].equals("withLinesCount"))
+      {
+        fileMinifier = new FileMinifier(args[1], args[2], args[3], Integer.parseInt(args[4]));
+        fileMinifier.removeFromFileWithLineCount();
+      }
+      else
+      {
+        fileMinifier = new FileMinifier(args[1], args[2], args[3], args[4]);
+        fileMinifier.removeFromFileWithKeyStop();
+      }
     }
     else
     {
-      fileMinifier = new FileMinifier(args[0], args[1], Integer.parseInt(args[2]));
+      if (args[0].equals("withLinesCount"))
+      {
+        fileMinifier = new FileMinifier(args[1], args[2], Integer.parseInt(args[3]));
+        fileMinifier.removeFromFileWithLineCount();
+      }
+      else
+      {
+        fileMinifier = new FileMinifier(args[1], args[2], args[3]);
+        fileMinifier.removeFromFileWithKeyStop();
+      }
     }
-    fileMinifier.removeFromFile();
   }
 
-  public void removeFromFile()
+  public void removeFromFileWithLineCount()
   {
     File sourceFile = new File(fileFromPath);
     File destinationFile = new File(fileToPath);
@@ -71,6 +106,53 @@ public class FileMinifier
           {
             br.readLine();
           }
+        }
+        else
+        {
+          bw.write(currentLine.concat("\n"));
+        }
+      }
+    } catch (FileNotFoundException e)
+    {
+      e.printStackTrace();
+    } catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      try
+      {
+        br.close();
+        bw.close();
+      } catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void removeFromFileWithKeyStop()
+  {
+    File sourceFile = new File(fileFromPath);
+    File destinationFile = new File(fileToPath);
+    BufferedReader br = null;
+    BufferedWriter bw =  null;
+
+    try
+    {
+      br = new BufferedReader(new FileReader(sourceFile));
+      bw = new BufferedWriter(new FileWriter(destinationFile));
+      String currentLine;
+      while ((currentLine = br.readLine()) != null)
+      {
+        if (currentLine.contains(searchKey))
+        {
+          do
+          {
+            currentLine = br.readLine();
+          }
+          while (!(currentLine.contains(stopKey)) && (currentLine != null));
         }
         else
         {
