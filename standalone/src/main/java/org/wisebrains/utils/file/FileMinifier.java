@@ -106,6 +106,7 @@ public class FileMinifier
             fileMinifier.removeFromFileWithKeyStop();
           }
         }
+        break;
       }
       case EXTRACT:
       {
@@ -132,6 +133,7 @@ public class FileMinifier
             fileMinifier.extractToFileWithKeyStop();
           }
         }
+        break;
       }
     }
   }
