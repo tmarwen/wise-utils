@@ -21,7 +21,11 @@ import java.io.IOException;
  * The counter is launched once the search key is found. It limits to either a stop token if specified
  * Or when reaching some range of lines when the flag "withLinesCount" is specified.
  *
- * Use below commands
+ * Use below commands after build:
+ * To minify a file based on lines count:
+ *  java -jar standalone-x.y.z.jar OPERATION WITH_LINES_COUNT FILE_NAME DESTINATION_FILE_NAME(optional) SEARCHED_KEY LINE_NUMBERS
+ * To minify a file based on some stop key:
+ *  java -jar standalone-x.y.z.jar OPERATION WITHOUT_LINES_COUNT FILE_NAME DESTINATION_FILE_NAME(optional) SEARCHED_KEY STOP_KEY_WORD
  *
  */
 public class FileMinifier
