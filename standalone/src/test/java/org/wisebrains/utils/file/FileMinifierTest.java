@@ -1,4 +1,4 @@
-package java.org.wisebrains.utils.file;
+package org.wisebrains.utils.file;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
