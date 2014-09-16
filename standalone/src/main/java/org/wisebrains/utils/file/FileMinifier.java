@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Created by eXo Platform MEA on 26/05/14.
@@ -134,7 +135,7 @@ public class FileMinifier
     }
   }
 
-  public void removeFromFileWithLineCount()
+  public File removeFromFileWithLineCount()
   {
     File sourceFile = new File(fileFromPath);
     File destinationFile = new File(fileToPath);
@@ -145,10 +146,11 @@ public class FileMinifier
     {
       br = new BufferedReader(new FileReader(sourceFile));
       bw = new BufferedWriter(new FileWriter(destinationFile));
+      Pattern pattern = Pattern.compile(Pattern.quote(searchKey), Pattern.CASE_INSENSITIVE);
       String currentLine;
       while ((currentLine = br.readLine()) != null)
       {
-        if (currentLine.contains(searchKey))
+        if (pattern.matcher(currentLine).find())
         {
           for (int i = 0; i < linesToCount; i++)
           {
@@ -176,9 +178,10 @@ public class FileMinifier
         e.printStackTrace();
       }
     }
+    return destinationFile;
   }
 
-  public void extractToFileWithLineCount()
+  public File extractToFileWithLineCount()
   {
     File sourceFile = new File(fileFromPath);
     File destinationFile = new File(fileToPath);
@@ -187,12 +190,13 @@ public class FileMinifier
     try
     {
       br = new BufferedReader(new FileReader(sourceFile));
+      Pattern pattern = Pattern.compile(Pattern.quote(searchKey), Pattern.CASE_INSENSITIVE);
       String currentLine;
 //      System.out.println(searchKey); //TODO: Add log trace instead of console out statements
       while ((currentLine = br.readLine()) != null)
       {
 //        System.out.println(currentLine.contains(searchKey)); //TODO: Add log trace instead of console out statements
-        if (currentLine.contains(searchKey))
+        if (pattern.matcher(currentLine).find())
         {
           for (int i = 0; i < linesToCount; i++)
           {
@@ -217,9 +221,10 @@ public class FileMinifier
         e.printStackTrace();
       }
     }
+    return destinationFile;
   }
 
-  public void removeFromFileWithKeyStop()
+  public File removeFromFileWithKeyStop()
   {
     File sourceFile = new File(fileFromPath);
     File destinationFile = new File(fileToPath);
@@ -230,16 +235,18 @@ public class FileMinifier
     {
       br = new BufferedReader(new FileReader(sourceFile));
       bw = new BufferedWriter(new FileWriter(destinationFile));
+      Pattern pattern = Pattern.compile(Pattern.quote(searchKey), Pattern.CASE_INSENSITIVE);
+      Pattern stopPattern = Pattern.compile(Pattern.quote(searchKey), Pattern.CASE_INSENSITIVE);
       String currentLine;
       while ((currentLine = br.readLine()) != null)
       {
-        if (currentLine.contains(searchKey))
+        if (pattern.matcher(currentLine).find())
         {
           do
           {
             currentLine = br.readLine();
           }
-          while (!(currentLine.contains(stopKey)) && (currentLine != null));
+          while (!((currentLine != null) && (stopPattern.matcher(currentLine).find())));
         } else
         {
           bw.write(currentLine.concat("\n"));
@@ -262,9 +269,10 @@ public class FileMinifier
         e.printStackTrace();
       }
     }
+    return destinationFile;
   }
 
-  public void extractToFileWithKeyStop()
+  public File extractToFileWithKeyStop()
   {
     File sourceFile = new File(fileFromPath);
     File destinationFile = new File(fileToPath);
@@ -274,17 +282,22 @@ public class FileMinifier
     try
     {
       br = new BufferedReader(new FileReader(sourceFile));
+      Pattern pattern = Pattern.compile(Pattern.quote(searchKey), Pattern.CASE_INSENSITIVE);
+      Pattern stopPattern = Pattern.compile(Pattern.quote(stopKey), Pattern.CASE_INSENSITIVE);
       String currentLine;
+      outerWhile:
       while ((currentLine = br.readLine()) != null)
       {
-        if ((currentLine.contains(searchKey)) && (currentLine != null))
+        if ((pattern.matcher(currentLine).find()))
         {
           quitIteration = false;
           do
           {
             FileUtils.writeStringToFile(destinationFile, currentLine.concat("\n"), "UTF-8", true);
             currentLine = br.readLine();
-            if (currentLine.contains(stopKey) && (currentLine != null))
+            if (currentLine == null)
+              break outerWhile;
+            if (stopPattern.matcher(currentLine).find())
             {
               FileUtils.writeStringToFile(destinationFile, currentLine.concat("\n"), "UTF-8", true);
               quitIteration = true;
@@ -309,5 +322,6 @@ public class FileMinifier
         e.printStackTrace();
       }
     }
+    return destinationFile;
   }
 }
