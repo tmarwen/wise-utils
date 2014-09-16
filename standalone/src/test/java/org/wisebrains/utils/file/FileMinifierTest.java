@@ -1,4 +1,4 @@
-package org.wisebrains.utils.file;
+package java.org.wisebrains.utils.file;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -6,6 +6,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.wisebrains.utils.file.FileMinifier;
 
 import java.io.File;
 import java.io.IOException;
