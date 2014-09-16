@@ -1,6 +1,7 @@
 package org.wisebrains.utils.file;
 
 import org.apache.commons.io.FileUtils;
+import org.wisebrains.utils.model.FileWithExtention;
 import org.wisebrains.utils.operation.OperationType;
 
 import java.io.BufferedReader;
@@ -35,8 +36,6 @@ public class FileMinifier
   private String searchKey;
   private int linesToCount;
   private String stopKey;
-  private static final String REMOVE = "remove";
-  private static final String EXTRACT = "extract";
 
   public FileMinifier(String fileFromPath, String fileToPath, String searchKey, int linesToCount)
   {
@@ -54,31 +53,24 @@ public class FileMinifier
     this.stopKey = stopKey;
   }
 
-
   public FileMinifier(String fileFromPath, String searchKey, int linesToCount)
   {
-    this.fileFromPath = fileFromPath;
-    this.fileToPath = fileFromPath + "-minified";
-    this.searchKey = searchKey;
-    this.linesToCount = linesToCount;
+    this(fileFromPath,
+        new FileWithExtention(fileFromPath, "-minified").getFilePath(),
+        searchKey,
+        linesToCount);
   }
 
   public FileMinifier(String fileFromPath, String searchKey, String stopKey)
   {
-    this.fileFromPath = fileFromPath;
-    this.fileToPath = fileFromPath + "-minified";
-    this.searchKey = searchKey;
-    this.stopKey = stopKey;
+    this(fileFromPath,
+        new FileWithExtention(fileFromPath, "-minified").getFilePath(),
+        searchKey,
+        stopKey);
   }
 
   public static void main(String[] args)
   {
-    args = new String[5];
-    args[0] = "remove";
-    args[1] = "withtoutLinesCount";
-    args[2] = "/home/exo/Work/working/customers-issues/SEE/SEE-20/tdump/dump";
-    args[3] = "by \"TP-Processor39\"";
-    args[4] = "at java.lang.Thread.run";
 
     FileMinifier fileMinifier;
     OperationType operation = OperationType.valueOf(args[0].toUpperCase());
@@ -123,17 +115,17 @@ public class FileMinifier
           } else
           {
             fileMinifier = new FileMinifier(args[2], args[3], args[4], args[5]);
-            fileMinifier.removeFromFileWithKeyStop();
+            fileMinifier.extractToFileWithKeyStop();
           }
         } else
         {
           if (args[1].equals("withLinesCount"))
           {
-            fileMinifier = new FileMinifier(args[2], args[3].concat("-EXTRACTED"), args[3], Integer.parseInt(args[4]));
-            fileMinifier.removeFromFileWithLineCount();
+            fileMinifier = new FileMinifier(args[2], args[3], Integer.parseInt(args[4]));
+            fileMinifier.extractToFileWithLineCount();
           } else
           {
-            fileMinifier = new FileMinifier(args[2], args[2].concat("-EXTRACTED"), args[3], args[4]);
+            fileMinifier = new FileMinifier(args[2], args[3], args[4]);
             fileMinifier.extractToFileWithKeyStop();
           }
         }
@@ -196,8 +188,10 @@ public class FileMinifier
     {
       br = new BufferedReader(new FileReader(sourceFile));
       String currentLine;
+//      System.out.println(searchKey); //TODO: Add log trace instead of console out statements
       while ((currentLine = br.readLine()) != null)
       {
+//        System.out.println(currentLine.contains(searchKey)); //TODO: Add log trace instead of console out statements
         if (currentLine.contains(searchKey))
         {
           for (int i = 0; i < linesToCount; i++)
