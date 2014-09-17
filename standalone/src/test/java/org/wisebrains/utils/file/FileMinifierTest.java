@@ -1,4 +1,4 @@
-package java.org.wisebrains.utils.file;
+package org.wisebrains.utils.file;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -6,7 +6,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.wisebrains.utils.file.FileMinifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,6 +99,51 @@ public class FileMinifierTest
     }
 
     Assert.assertEquals("There should be only three lines containing the \"KEY\" and \"endorsed\" words: ", expectedContent, finalContent);
+
+  }
+
+  @Test
+  public void testRemoveFromFileWithLinesCount()
+  {
+
+    String expectedContent = "I'm looking for\n"
+        + "may be endorsed within\n";
+
+    FileMinifier fileMinifier = new FileMinifier(file.getPath(), "KEY", 1);
+    minified = fileMinifier.removeFromFileWithLineCount();
+    String finalContent = null;
+
+    try
+    {
+      finalContent = FileUtils.readFileToString(minified);
+    } catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+
+    Assert.assertEquals("There should be only two lines without the \"KEY\" word: ", expectedContent, finalContent);
+
+  }
+
+  @Test
+  public void testRemoveFromFileWithKeyStop()
+  {
+
+    String expectedContent = "I'm looking for\n";
+
+    FileMinifier fileMinifier = new FileMinifier(file.getPath(), "KEY", "endorsed");
+    minified = fileMinifier.removeFromFileWithKeyStop();
+    String finalContent = null;
+
+    try
+    {
+      finalContent = FileUtils.readFileToString(minified);
+    } catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+
+    Assert.assertEquals("There should be only one line in final file: ", expectedContent, finalContent);
 
   }
 }
