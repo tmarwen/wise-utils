@@ -152,13 +152,16 @@ public class FileMinifier
       {
         if (pattern.matcher(currentLine).find())
         {
-          for (int i = 0; i < linesToCount; i++)
+          int index = 1;
+          while (index < linesToCount)
           {
             br.readLine();
+            index++;
           }
         } else
         {
-          bw.write(currentLine.concat("\n"));
+          bw.write(currentLine);
+          bw.newLine();
         }
       }
     } catch (FileNotFoundException e)
@@ -171,8 +174,14 @@ public class FileMinifier
     {
       try
       {
-        br.close();
-        bw.close();
+        if (br != null)
+        {
+          br.close();
+        }
+        if (bw != null)
+        {
+          bw.close();
+        }
       } catch (IOException e)
       {
         e.printStackTrace();
@@ -215,7 +224,10 @@ public class FileMinifier
     {
       try
       {
-        br.close();
+        if (br != null)
+        {
+          br.close();
+        }
       } catch (IOException e)
       {
         e.printStackTrace();
@@ -249,7 +261,8 @@ public class FileMinifier
           while (!((currentLine != null) && (stopPattern.matcher(currentLine).find())));
         } else
         {
-          bw.write(currentLine.concat("\n"));
+          bw.write(currentLine);
+          bw.newLine();
         }
       }
     } catch (FileNotFoundException e)
@@ -262,8 +275,14 @@ public class FileMinifier
     {
       try
       {
-        br.close();
-        bw.close();
+        if (br != null)
+        {
+          br.close();
+        }
+        if (bw != null)
+        {
+          bw.close();
+        }
       } catch (IOException e)
       {
         e.printStackTrace();
@@ -316,7 +335,10 @@ public class FileMinifier
     {
       try
       {
-        br.close();
+        if (br != null)
+        {
+          br.close();
+        }
       } catch (IOException e)
       {
         e.printStackTrace();
