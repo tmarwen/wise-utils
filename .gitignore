@@ -38,3 +38,6 @@ target/
 
 # Logs
 *.log
+
+# Coveralls Config file
+.coveralls.yml
