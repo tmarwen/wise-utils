@@ -5,4 +5,4 @@ jdk:
   - openjdk7
   - openjdk6
 after_success:
-  - mvn -Pwise-coverage clean cobertura:report coveralls:cobertura
+  - mvn -Pwise-coverage clean cobertura:cobertura coveralls:cobertura
