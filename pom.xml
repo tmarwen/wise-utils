@@ -12,12 +12,18 @@
   <name>Wise Utils Parent</name>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
+
     <maven.plugin.compiler.version>3.1</maven.plugin.compiler.version>
     <maven.plugin.surfire.version>2.17</maven.plugin.surfire.version>
     <maven.plugin.dependency.version>2.8</maven.plugin.dependency.version>
     <maven.plugin.jar.version>2.5</maven.plugin.jar.version>
+    <maven.plugin.coveralls.version>2.2.0</maven.plugin.coveralls.version>
+    <maven.plugin.cobertura.version>2.6</maven.plugin.cobertura.version>
+
     <jarModuleMainEntry>org.wisebrains.test.Fake</jarModuleMainEntry>
   </properties>
 
@@ -52,6 +58,8 @@
   <build>
     <pluginManagement>
       <plugins>
+
+        <!-- BEGIN SNIPPET : Maven Compiler Plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -61,6 +69,9 @@
             <target>${maven.compiler.target}</target>
           </configuration>
         </plugin>
+        <!-- END SNIPPET : Maven Compiler Plugin -->
+
+        <!-- BEGIN SNIPPET : Maven Surefire Plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -69,6 +80,9 @@
             <testSourceDirectory>${project.build.testSourceDirectory}</testSourceDirectory>
           </configuration>
         </plugin>
+        <!-- END SNIPPET : Coveralls Surefire Plugin -->
+
+        <!-- BEGIN SNIPPET : Maven Dependency Plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
@@ -86,6 +100,9 @@
             </execution>
           </executions>
         </plugin>
+        <!-- END SNIPPET : Maven Dependency Plugin -->
+
+        <!-- BEGIN SNIPPET : Maven JAR Plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -100,8 +117,59 @@
             </archive>
           </configuration>
         </plugin>
+        <!-- END SNIPPET : Maven JAR Plugin -->
+
+        <!-- BEGIN SNIPPET : Coveralls and Cobertura Report Plugins -->
+        <plugin>
+          <groupId>org.eluder.coveralls</groupId>
+          <artifactId>coveralls-maven-plugin</artifactId>
+          <version>${maven.plugin.coveralls.version}</version>
+          <configuration>
+            <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>${maven.plugin.cobertura.version}</version>
+          <configuration>
+            <format>xml</format>
+            <maxmem>256m</maxmem>
+            <!-- aggregated reports for multi-module projects -->
+            <aggregate>true</aggregate>
+          </configuration>
+        </plugin>
+        <!-- END SNIPPET : Coveralls and Cobertura Report Plugins -->
+
       </plugins>
     </pluginManagement>
+
   </build>
+
+  <profiles>
+    <profile>
+      <id>wise-coverage</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>with-coverage</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
