@@ -8,3 +8,7 @@ Master: [![Coverage Status](https://img.shields.io/coveralls/tmarwen/wise-utils.
 
 A bench of ad hoc utility methods used for some tasks automation.
 ===
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tmarwen/wise-utils/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
