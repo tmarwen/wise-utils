@@ -20,10 +20,13 @@ RUN  \
 run git clone https://github.com/tmarwen/wise-utils.git
 
 # Build project
-run cd wise-utils/standalone &amp;&amp; mvn verify dependency:copy-dependencies
+run cd wise-utils/standalone && mvn clean install
+
+# Build project
+run cd target
 
 # create working directory
-WORKDIR standalone
+WORKDIR target
 
 # Define default command.
 CMD ["bash"]
